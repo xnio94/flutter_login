@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -654,9 +655,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               color: theme.primaryColor,
               child: InkWell(
                 radius: 48,
-                child: Icon(
-                  loginProvider.icon,
-                  color: theme.primaryTextTheme.bodyText1.color,
+                child: Padding(
+                  padding: EdgeInsets.all(4),
+                  child: Icon(
+                    loginProvider.icon,
+                    color: theme.primaryTextTheme.bodyText1.color,
+                  ),
                 ),
                 onTap: () => _loginProviderSubmit(
                   control: _providerControllerList[index],
