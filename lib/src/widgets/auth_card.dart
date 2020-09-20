@@ -653,6 +653,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             child: Card(
               color: theme.primaryColor,
               child: InkWell(
+                radius: 48,
                 child: Icon(
                   loginProvider.icon,
                   color: theme.primaryTextTheme.bodyText1.color,
