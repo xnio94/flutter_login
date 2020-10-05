@@ -644,38 +644,51 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   Widget _buildProvidersLogInButton(ThemeData theme, LoginMessages messages, Auth auth) {
     return Theme(
       data: theme,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: auth.loginProvidersList.map((loginProvider) {
-          final int index = auth.loginProvidersList.indexOf(loginProvider);
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: ScaleTransition(
+              scale: _buttonScaleAnimation,
+              child: Text("or sign in with", textAlign: TextAlign.center, style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: auth.loginProvidersList.map((loginProvider) {
+              final int index = auth.loginProvidersList.indexOf(loginProvider);
 
-          return ScaleTransition(
-            scale: _buttonScaleAnimation,
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(48),
-              ),
-              color: theme.primaryColor,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(48),
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Icon(
-                    loginProvider.icon,
-                    color: theme.primaryTextTheme.bodyText1.color,
+              return ScaleTransition(
+                scale: _buttonScaleAnimation,
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(48),
+                  ),
+                  color: theme.primaryColor,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(48),
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Icon(
+                        loginProvider.icon,
+                        color: theme.primaryTextTheme.bodyText1.color,
+                      ),
+                    ),
+                    onTap: () => _loginProviderSubmit(
+                      control: _providerControllerList[index],
+                      callback: () {
+                        return loginProvider.callback();
+                      },
+                    ),
+                    splashColor: theme.accentColor,
                   ),
                 ),
-                onTap: () => _loginProviderSubmit(
-                  control: _providerControllerList[index],
-                  callback: () {
-                    return loginProvider.callback();
-                  },
-                ),
-                splashColor: theme.accentColor,
-              ),
-            ),
-          );
-        }).toList(),
+              );
+            }).toList(),
+          )
+        ],
       ),
     );
   }
@@ -733,10 +746,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 _buildForgotPassword(theme, messages),
                 _buildSubmitButton(theme, messages, auth),
                 _buildSwitchAuthButton(theme, messages, auth),
-                SizedBox(
-                  height: 8,
-                ),
-                _buildProvidersLogInButton(theme, messages, auth),
+                if (_providerControllerList.isNotEmpty) ...[
+                  _buildProvidersLogInButton(theme, messages, auth),
+                ]
               ],
             ),
           ),
